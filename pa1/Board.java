@@ -1,65 +1,73 @@
-public class Board {  
-	private char[][] board;
+/*
+ * A board class that can be used to play any 2D board-based game
+ */
 
-	public Board() {
-        board = new char[3][3];
+public class Board {
+    private int height;
+    private int width;
+	private Cell[][] board;
+
+    /*
+     * Construct a empty board
+     */
+	public Board(int height, int width) {
+        this.height = height;
+        this.width = width;
+        board = new Cell[height][width];
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                board[i][j] = new Cell();
+            }
+        }
 	}
 
+    public int getHeight() {
+        return height;
+    }
 
-    public void initializeBoard() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                this.board[i][j] = ' ';
+    public int getWidth() {
+        return width;
+    }
+
+    public Cell getCell(int row, int col) {
+        //System.out.println(row + " " + col);
+        return board[row][col];
+    }
+
+    /*
+     * Clear all the cells on the board
+     */
+    public void clearBoard() {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                this.board[i][j].clearItem();
             }
         }
     }
 
+    /*
+     * Check if the cell is empty
+     */
+    public boolean isEmpty(int row, int col) {
+        return board[row][col].isEmpty();
+    }
 
-    public boolean makeMove(int row, int col, char currentMove) {
-        if (board[row][col] == ' ') {
-            board[row][col] = currentMove;
-            return true;
-        } else {
-            return false;
-        }
+    /*
+     * Place an item on the cell
+     */
+    public void placeItemOnCell(int row, int col, Object item) {
+        board[row][col].placeItem(item);
     }
 
 
-    public boolean checkCurrentWin(char currentMove) {
-        boolean isWin = false;
-
-        // check horizontal
-        for (int i = 0; i < 3; i++) {
-            isWin |= (board[i][0] == currentMove && 
-                      board[i][1] == currentMove && 
-                      board[i][2] == currentMove);
-        }
-
-        // check vertical
-        for (int i = 0; i < 3; i++) {
-            isWin |= (board[0][i] == currentMove && 
-                      board[1][i] == currentMove && 
-                      board[2][i] == currentMove);
-        }
-
-        // bottom-left to top-right
-        isWin |= (board[2][0] == currentMove && 
-                  board[1][1] == currentMove && 
-                  board[0][2] == currentMove);
-
-        // top-left to bottom-right
-        isWin |= (board[0][0] == currentMove && 
-                  board[1][1] == currentMove && 
-                  board[2][2] == currentMove);
-
-        return isWin;
-    }
-    
-
+    /*
+     * Return whether the board is full
+     */
     public boolean isFull() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (this.board[i][j] == ' ') {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (this.board[i][j].isEmpty()) {
                     return false;
                 }
             }
@@ -68,13 +76,31 @@ public class Board {
         return true;
     }
 
+    /*
+     * Print a single horizon line for this board
+     */
+    private void printHorizonLine() {
+        for (int j = 0; j < width; j++) {
+            System.out.print("+--");
+        }
+        System.out.println("+");
+    }
+
+    /*
+     * Print the board
+     */
     public void printBoard() {
-        System.out.println("+--+--+--+");
-        System.out.println("|" + board[0][0] + " |" + board[0][1] + " |" + board[0][2] + " |");
-        System.out.println("+--+--+--+");
-        System.out.println("|" + board[1][0] + " |" + board[1][1] + " |" + board[1][2] + " |");
-        System.out.println("+--+--+--+");
-        System.out.println("|" + board[2][0] + " |" + board[2][1] + " |" + board[2][2] + " |");
-        System.out.println("+--+--+--+");
+
+        for (int i = 0; i < height; i++) {
+            this.printHorizonLine();
+
+            for (int j = 0; j < width; j++) {
+                System.out.print("|" + board[i][j] + " ");
+            }
+
+            System.out.println("|");
+        }
+
+        this.printHorizonLine();
     }
 }

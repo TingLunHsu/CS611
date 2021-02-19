@@ -1,109 +1,142 @@
 import java.util.*;
 
-public class TicTacToe {  
-	private int scoreO;
-	private int scoreX;
-	private Board board;
-	private char currentPlayer;
-
-
-	public TicTacToe() {
-		board = new Board();
-		scoreO = 0;
-		scoreX = 0;
+public class TicTacToe extends BoardBasedGame {  
+	HashMap<Player, String> markMap;
+	/*
+     * A constructor that creates a TicTacToe that inherit BoardBasedGame
+     * with empty board of given specific board size
+     */
+	public TicTacToe(Player playerA, Player playerB, int boardHeight, int boardWidth) {
+		super(playerA, playerB, boardHeight, boardWidth);
+		this.markMap = markMap = new HashMap<Player, String>();
+		markMap.put(playerA, "O");
+		markMap.put(playerB, "X");
 	}
 
-	/* play another game */
-	private void playAnotherGame() {
-		board.initializeBoard();
-		currentPlayer = 'O';
-
-		boolean endGame = false;
-
-		while (endGame == false) {
-			// print the current board
-			this.printBoard();
-
-			// for a client to make a move
-			this.makeMove();
-
-			// check if the game ends
-			if (board.isFull()) {
-				System.out.println("The board is full, no one wins!");
-				break;
-			}
-
-			if (board.checkCurrentWin(currentPlayer)) {
-				System.out.println("Player " + currentPlayer + " wins!");
-				if (currentPlayer == 'O') {
-					scoreO++;
-				}
-
-				if (currentPlayer == 'X') {
-					scoreX++;
-				}
-				break;
-			}
-
-			// change player
-			this.changePlayer();
-		}
-	}
-
-	/* for the current player to make a valid move */
-	private void makeMove() {
+	/*
+	 * For the current player to make a valid move
+	 */
+	protected void makeMove() {
 		Scanner sc = new Scanner(System.in);
 
 		int row;
 		int col;
 
-		do {
+		// Player can exit the loop only after making a valid move
+		while (true) {
 			// ask client for next move
 			System.out.printf("Player " + currentPlayer + " Enter your move: ");
 			String input = sc.nextLine();
 			row = Character.getNumericValue(input.charAt(0)) - 1;
 			col = Character.getNumericValue(input.charAt(2)) - 1;
-		} while (board.makeMove(row, col, currentPlayer) == false);
-	}
 
-	/* change the player */
-	private void changePlayer() {
-		if (currentPlayer == 'X') {
-			currentPlayer = 'O';
-		} else {
-			currentPlayer = 'X';
+			// check if the move is valid
+			if (0 > row || row >= board.getHeight()) {
+				System.out.printf("Invalid row! Please enter a row from %d to %d\n", 1, board.getHeight());
+				continue;
+			}
+
+			if (0 > col || col >= board.getWidth()) {
+				System.out.printf("Invalid column! Please enter a column from %d to %d\n", 1, board.getWidth());
+				continue;
+			}
+
+			if (!board.isEmpty(row, col)) {
+				System.out.println("This cell is not empty!");
+				continue;
+			}
+
+			break;
 		}
-	}
 
-	/* print the board */
-	private void printBoard() {
-		board.printBoard();
-	}
+		// place the mark
+		Mark mark = new Mark(markMap.get(currentPlayer));
 
-	public void startPlaying() {
-		Scanner sc = new Scanner(System.in); 
-
-		System.out.println("Hi, welcome to TicTacToe!");
-
-		char c;
-		do {
-			this.playAnotherGame();
-
-			// ask the client to see whether to start another game
-			System.out.printf("Wanna play another game? (Y/N): ");
-			c = sc.next().charAt(0); 
-		} while ('y' == Character.toLowerCase(c));
-
-		// print the scores in the end
-		System.out.println("Score for O: " + scoreO);
-		System.out.println("Score for X: " + scoreX);
+		board.placeItemOnCell(row, col, mark);
 	}
 
 	/*
-	 * Client code, for a client to start playing a TicTacToe game
+	 * Check if win by connect horizontally
 	 */
-    public static void main(String[] args){
-    	TicTacToe tictactoe = new TicTacToe();
-    	tictactoe.startPlaying();
+	private boolean horizontalWin(String mark) {
+		boolean isWin = false;
+
+		for (int i = 0; i < board.getHeight(); i++) {
+        	boolean rowConnect = true;
+        	for (int j = 0; j < board.getWidth(); j++) {
+            	rowConnect &= board.getCell(i, j).toString().equals(mark);
+            }
+
+            isWin |= rowConnect;
+        }
+
+        return isWin;
+	}
+
+	/*
+	 * Check if win by connect vertically
+	 */
+	private boolean verticalWin(String mark) {
+		boolean isWin = false;
+
+        for (int i = 0; i < board.getWidth(); i++) {
+        	boolean colConnect = true;
+        	for (int j = 0; j < board.getHeight(); j++) {
+            	colConnect &= board.getCell(j, i).toString().equals(mark);
+            }
+
+            isWin |= colConnect;
+        }
+
+        return isWin;
+	}
+
+	/*
+	 * Check if win by connect bottom-left to top-right
+	 */
+	private boolean connectUpSlope(String mark) {
+		boolean connectUp = true;
+
+        for (int i = 0; i < board.getHeight(); i++) {
+        	connectUp &= board.getCell(board.getHeight() - i - 1, i).toString().equals(mark);
+        }
+
+        return connectUp;
+	}
+
+	/*
+	 * Check if win by connect top-left to bottom-right
+	 */
+	private boolean connectDownSlope(String mark) {
+        boolean connectDown = true;
+
+        for (int i = 0; i < board.getHeight(); i++) {
+        	connectDown &= board.getCell(i, i).toString().equals(mark);
+        }
+
+        return connectDown;
+	}
+
+	/*
+	 * Check if the current player wins
+	 */
+	protected boolean checkWin() {
+        boolean isWin = false;
+
+        String mark = markMap.get(currentPlayer);
+
+        // check horizontal
+        isWin |= this.horizontalWin(mark);
+
+        // check vertical
+        isWin |= this.verticalWin(mark);
+
+        // bottom-left to top-right
+        isWin |= this.connectUpSlope(mark);
+
+        // top-left to bottom-right
+        isWin |= this.connectDownSlope(mark);
+
+        return isWin;
     }
 }
