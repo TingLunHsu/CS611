@@ -5,7 +5,7 @@
 public class Board {
     private int height;
     private int width;
-	private Cell[][] board;
+	private Object[][] board;
 
     /*
      * Construct a empty board
@@ -13,13 +13,7 @@ public class Board {
 	public Board(int height, int width) {
         this.height = height;
         this.width = width;
-        board = new Cell[height][width];
-
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                board[i][j] = new Cell();
-            }
-        }
+        board = new Object[height][width];
 	}
 
     public int getHeight() {
@@ -30,7 +24,7 @@ public class Board {
         return width;
     }
 
-    public Cell getCell(int row, int col) {
+    public Object getCell(int row, int col) {
         //System.out.println(row + " " + col);
         return board[row][col];
     }
@@ -41,7 +35,7 @@ public class Board {
     public void clearBoard() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                this.board[i][j].clearItem();
+                this.board[i][j] = null;
             }
         }
     }
@@ -50,14 +44,14 @@ public class Board {
      * Check if the cell is empty
      */
     public boolean isEmpty(int row, int col) {
-        return board[row][col].isEmpty();
+        return board[row][col] == null;
     }
 
     /*
      * Place an item on the cell
      */
     public void placeItemOnCell(int row, int col, Object item) {
-        board[row][col].placeItem(item);
+        board[row][col] = item;
     }
 
 
@@ -67,7 +61,7 @@ public class Board {
     public boolean isFull() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (this.board[i][j].isEmpty()) {
+                if (this.board[i][j] == null) {
                     return false;
                 }
             }
@@ -95,7 +89,11 @@ public class Board {
             this.printHorizonLine();
 
             for (int j = 0; j < width; j++) {
-                System.out.print("|" + board[i][j] + " ");
+                if (board[i][j] == null) {
+                    System.out.print("|  ");
+                } else {
+                    System.out.print("|" + board[i][j] + " ");
+                }
             }
 
             System.out.println("|");

@@ -24,23 +24,29 @@ public class MultipleGames {
 
 		char c;
 		do {
-			// Ask what game to play
-			System.out.printf("What do you want to play? Enter 1 for TicTacToe, 2 for Orders and Chaos: ");
-			c = sc.next().charAt(0);
-			BoardBasedGame ttt;
+			// ask what game to play
+			while (true) {
+				System.out.printf("What do you want to play? Enter 1 for TicTacToe, 2 for Orders and Chaos: ");
+				c = sc.next().charAt(0);
+
+				if (c == '1' || c == '2') {
+					break;
+				} else{
+					System.out.println("Please enter a valid input!");
+				}
+			};
+
+			// initialize and start the game
 			if (c == '1') {
 				System.out.printf("What size of TicTacToe do you want to play? Enter a number from 3 ~ 9: ");
 				c = sc.next().charAt(0);
 				int size = Character.getNumericValue(c);
-				ttt = new TicTacToe(playerA, playerB, size, size);
-			} else if (c == '2') {
-				ttt = new TicTacToe(playerA, playerB, 3, 3);
+				TicTacToe ttt = new TicTacToe(playerA, playerB, size, size);
+				ttt.startGame();
 			} else {
-				ttt = new TicTacToe(playerA, playerB, 3, 3);
+				OrderChaos oc = new OrderChaos(playerA, playerB, 6, 6, 5);
+				oc.startGame();
 			}
-
-			// start this game
-			ttt.startGame();
 
 			// Ask whether to start another game
 			System.out.printf("Wanna play another game? (Y/N): ");

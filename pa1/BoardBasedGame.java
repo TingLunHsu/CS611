@@ -1,7 +1,7 @@
 import java.util.*;
 /*
  * A abstract class that represent a board based game
- * that contains a board and multiple players
+ * that contains a board and two players
  */
 public abstract class BoardBasedGame {
 	protected Board board;
@@ -32,11 +32,20 @@ public abstract class BoardBasedGame {
 			// for a client to make a move
 			this.makeMove();
 
-			// check if the player wins
-			if (this.checkWin()) {
+			// check if the game ends
+			if (this.checkWin(playerA)) {
 				this.printBoard();
-				System.out.println("Player " + currentPlayer + " wins!");
-				currentPlayer.incrementScore();
+				System.out.println("Player " + playerA + " wins!");
+				playerA.incrementScore();
+				break;
+			} else if (this.checkWin(playerB)){
+				this.printBoard();
+				System.out.println("Player " + playerB + " wins!");
+				playerB.incrementScore();
+				break;
+			} else if (board.isFull()) {
+				this.printBoard();
+				System.out.println("The board is full, no one wins!");
 				break;
 			}
 
@@ -53,7 +62,7 @@ public abstract class BoardBasedGame {
 	/* 
 	 * For the current player to make a valid move
 	 */
-	abstract protected boolean checkWin();
+	abstract protected boolean checkWin(Player player);
 
 	/*
 	 * Change the player
