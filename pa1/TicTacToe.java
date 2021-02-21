@@ -1,7 +1,7 @@
 import java.util.*;
 
 /*
- * TicTacToe class that extends ConnectBasedGame for play to play TicTacToe
+ * TicTacToe class that extends ConnectBasedGame to play TicTacToe
  */
 public class TicTacToe extends ConnectBasedGame {  
 	HashMap<Player, Character> markMap;
