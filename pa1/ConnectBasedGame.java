@@ -1,5 +1,10 @@
 import java.util.*;
 
+/*
+ * An abstract class that extends BoardBasedGame 
+ * It contains methods that are commonly used in connect based games
+ * such as TicTacToe, Order and Chaos, Connect Four, Gobang
+ */
 public abstract class ConnectBasedGame extends BoardBasedGame {
 	public ConnectBasedGame(Player playerA, Player playerB, int boardHeight, int boardWidth) {
 		super(playerA, playerB, boardHeight, boardWidth);

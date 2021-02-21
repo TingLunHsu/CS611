@@ -1,5 +1,8 @@
 import java.util.*;
 
+/*
+ * OrderChaos class that extends ConnectBasedGame for play to play Order and Chaos
+ */
 public class OrderChaos extends ConnectBasedGame {
 	private int threshold;
 	/*
@@ -17,19 +20,34 @@ public class OrderChaos extends ConnectBasedGame {
 	protected void makeMove() {
 		Scanner sc = new Scanner(System.in);
 
+		// ask which mark to put
+		String input;
+		char mark;
+		while (true) {
+			System.out.printf("Which mark do you want to use? (O/X):");
+			input = sc.nextLine();
+			mark = input.charAt(0);
+			if (mark == 'O' || mark == 'X') {
+				break;
+			} else{
+				System.out.println("Please enter a valid input!");
+			}
+		};
+
 		int row;
 		int col;
 
-		// Player can exit the loop only after making a valid move
+		// ask client for next move
+		// player can exit the loop only after making a valid move
 		while (true) {
-			// ask client for next move
+			System.out.println("***For example, to put the mark at row 2, col 3, enter: 2,3***");
 			if (currentPlayer == playerA) {
 				System.out.printf("Player " + currentPlayer + " - Order Enter your move: ");
 			} else {
 				System.out.printf("Player " + currentPlayer + " - Chaos Enter your move: ");
 			}
 
-			String input = sc.nextLine();
+			input = sc.nextLine();
 			row = Character.getNumericValue(input.charAt(0)) - 1;
 			col = Character.getNumericValue(input.charAt(2)) - 1;
 
@@ -51,20 +69,6 @@ public class OrderChaos extends ConnectBasedGame {
 
 			break;
 		}
-
-
-		// ask which mark to put
-		char mark;
-		while (true) {
-			System.out.printf("What mark do you want to use? (O/X):");
-			mark = sc.next().charAt(0);
-
-			if (mark == 'O' || mark == 'X') {
-				break;
-			} else{
-				System.out.println("Please enter a valid input!");
-			}
-		};
 
 		// place the mark
 		board.placeItemOnCell(row, col, mark);

@@ -1,5 +1,8 @@
 import java.util.*;
 
+/*
+ * TicTacToe class that extends ConnectBasedGame for play to play TicTacToe
+ */
 public class TicTacToe extends ConnectBasedGame {  
 	HashMap<Player, Character> markMap;
 	/*
@@ -24,6 +27,7 @@ public class TicTacToe extends ConnectBasedGame {
 
 		// Player can exit the loop only after making a valid move
 		while (true) {
+			System.out.println("***For example, to put the mark at row 2, col 3, enter: 2,3***");
 			// ask client for next move
 			System.out.printf("Player " + currentPlayer + " Enter your move: ");
 			String input = sc.nextLine();

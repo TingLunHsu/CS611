@@ -1,5 +1,9 @@
 import java.util.*;
 
+/*
+ * The main class of this directory
+ * Allows users to start playing series of games
+ */
 public class MultipleGames {  
 	private Player playerA;
 	private Player playerB;
@@ -20,16 +24,19 @@ public class MultipleGames {
 	public void startPlayingGames() {
 		Scanner sc = new Scanner(System.in); 
 
-		System.out.println("Hi, welcome to TicTacToe!");
+		System.out.println("Hi, welcome to game series!");
 
-		char c;
+		String str;
+		int gameindex;
+
 		do {
 			// ask what game to play
 			while (true) {
 				System.out.printf("What do you want to play? Enter 1 for TicTacToe, 2 for Orders and Chaos: ");
-				c = sc.next().charAt(0);
+				str = sc.nextLine();
+				gameindex = Integer.parseInt(str);
 
-				if (c == '1' || c == '2') {
+				if (1 <= gameindex && gameindex <= 2) {
 					break;
 				} else{
 					System.out.println("Please enter a valid input!");
@@ -37,10 +44,22 @@ public class MultipleGames {
 			};
 
 			// initialize and start the game
-			if (c == '1') {
-				System.out.printf("What size of TicTacToe do you want to play? Enter a number from 3 ~ 9: ");
-				c = sc.next().charAt(0);
-				int size = Character.getNumericValue(c);
+			if (gameindex == 1) {
+				int size;
+
+				// ask what size of TicTacToe to play
+				while (true) {
+					System.out.printf("What size of TicTacToe do you want to play? Enter a number from 3 ~ 9: ");
+					str = sc.nextLine();
+					size = Integer.parseInt(str);
+
+					if (3 <= size && size <= 9) {
+						break;
+					} else {
+						System.out.println("Please enter a valid size!");
+					}
+				}
+				
 				TicTacToe ttt = new TicTacToe(playerA, playerB, size, size);
 				ttt.startGame();
 			} else {
@@ -50,8 +69,8 @@ public class MultipleGames {
 
 			// Ask whether to start another game
 			System.out.printf("Wanna play another game? (Y/N): ");
-			c = sc.next().charAt(0); 
-		} while ('y' == Character.toLowerCase(c));
+			str = sc.nextLine();
+		} while ('y' == Character.toLowerCase(str.charAt(0)));
 
 		// print the scores in the end
 		System.out.println("Score for playerA: " + playerA.getScore());
